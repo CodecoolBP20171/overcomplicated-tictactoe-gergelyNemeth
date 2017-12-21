@@ -28,14 +28,28 @@ public class GameController {
         return new TictactoeGame();
     }
 
+    @ModelAttribute("funfact")
+    public String getFunfact() {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response =
+                    restTemplate.getForEntity("http://localhost:60001/funfact", String.class);
+            JacksonJsonParser jacksonJsonParser = new JacksonJsonParser();
+            return (String) jacksonJsonParser.parseMap(response.getBody()).get("funfact");
+        } catch (ResourceAccessException e) {
+            System.out.println("Avatar Service is unavailable: " + e);
+            return "Chuck Norris knows the last digit of pi.";
+        }
+    }
+
     @ModelAttribute("avatar_uri")
-    public Object getAvatarUri(HttpSession httpSession) {
+    public String getAvatarUri(HttpSession httpSession) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> response =
                     restTemplate.getForEntity("http://localhost:60000/avatar?avatarString=" + httpSession.getId(), String.class);
             JacksonJsonParser jacksonJsonParser = new JacksonJsonParser();
-            return jacksonJsonParser.parseMap(response.getBody()).get("avatarURI");
+            return (String) jacksonJsonParser.parseMap(response.getBody()).get("avatarURI");
         } catch (ResourceAccessException e) {
             System.out.println("Avatar Service is unavailable: " + e);
             return "https://robohash.org/codecool";
@@ -58,7 +72,7 @@ public class GameController {
                            HttpSession httpSession) {
         game.initGame();
         model.addAttribute("avatar_uri", getAvatarUri(httpSession));
-        model.addAttribute("funfact", "&quot;Chuck Norris knows the last digit of pi.&quot;");
+//        model.addAttribute("funfact", "&quot;Chuck Norris knows the last digit of pi.&quot;");
         model.addAttribute("comic_uri", "https://imgs.xkcd.com/comics/bad_code.png");
         return "game";
     }

@@ -78,7 +78,7 @@
                     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#changeNameModal">
                         Change name
                     </button>
-                    <p class="lead funfact" th:utext="${funfact}"></p>
+                    <p class="lead funfact" th:utext="'&ldquo;' + ${funfact} + '&rdquo;'"></p>
                 </div>
             </div>
         </div>
