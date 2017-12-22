@@ -37,7 +37,7 @@ public class GameController {
             JacksonJsonParser jacksonJsonParser = new JacksonJsonParser();
             return (String) jacksonJsonParser.parseMap(response.getBody()).get("funfact");
         } catch (ResourceAccessException e) {
-            System.out.println("Avatar Service is unavailable: " + e);
+            System.out.println("FunFact Service is unavailable: " + e);
             return "Chuck Norris knows the last digit of pi.";
         }
     }
