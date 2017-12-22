@@ -1,18 +1,19 @@
 package com.codecool.enterprise.overcomplicated.model;
 
-import org.springframework.boot.json.JacksonJsonParser;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 @Component
 public class TictactoeGame {
 
     private String[] table;
     private String winner = null;
+
+    public TictactoeGame(){}
 
     public boolean isGameOver() {
         return gameOver;
@@ -58,9 +59,6 @@ public class TictactoeGame {
             table[move] = "O";
             System.out.println("Player moved " + move);
             checkWinner();
-            if (winner == null) {
-                aiMove();
-            }
         }
     }
 
@@ -123,27 +121,24 @@ public class TictactoeGame {
         return true;
     }
 
-    public void aiMove() {
-        int move;
-        try {
-            String gameTable = String.join("", table);
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> response =
-                    restTemplate.getForEntity("http://localhost:60003/ai?table=" + gameTable, String.class);
-            move = Integer.valueOf(response.getBody());
-            table[move] = "X";
-            System.out.println("Computer moved " + move);
-        } catch (ResourceAccessException e) {
-            System.out.println("AI Service is unavailable: " + e);
-            Random random = new Random();
-            move = random.nextInt(9);
-            if (numOfFreeCells() > 0) {
-                while (!isMoveValid(move) && numOfFreeCells() > 0) {
-                    move = random.nextInt(9);
-                }
+    public void aiMove(Integer move) {
+        if (winner == null) {
+            if (move != null) {
                 table[move] = "X";
+                System.out.println("Computer moved " + move);
+            } else {
+                // Random move
+                Random random = new Random();
+                move = random.nextInt(9);
+                if (numOfFreeCells() > 0) {
+                    while (!isMoveValid(move) && numOfFreeCells() > 0) {
+                        move = random.nextInt(9);
+                    }
+                    table[move] = "X";
+                    System.out.println("Computer randomly moved " + move);
+                }
             }
+            checkWinner();
         }
-        checkWinner();
     }
 }

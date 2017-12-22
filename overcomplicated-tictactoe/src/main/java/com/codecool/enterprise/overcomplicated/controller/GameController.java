@@ -57,6 +57,22 @@ public class GameController {
         }
     }
 
+    private Integer getAiMove(TictactoeGame game) {
+        Integer move = null;
+        try {
+            String gameTable = String.join("", game.getTable());
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response =
+                    restTemplate.getForEntity("http://localhost:60003/ai?table=" + gameTable, String.class);
+            if (response.getBody() != null) {
+                move = Integer.valueOf(response.getBody());
+            }
+        } catch (ResourceAccessException e) {
+            System.out.println("AI Service is unavailable: " + e);
+        }
+        return move;
+    }
+
     @GetMapping(value = "/")
     public String welcomeView(@ModelAttribute Player player) {
         return "welcome";
@@ -69,10 +85,8 @@ public class GameController {
 
     @GetMapping(value = "/game")
     public String gameView(@ModelAttribute("player") Player player, Model model,
-                           @ModelAttribute("game") TictactoeGame game,
-                           HttpSession httpSession) {
+                           @ModelAttribute("game") TictactoeGame game) {
         game.initGame();
-        model.addAttribute("avatar_uri", getAvatarUri(httpSession));
         model.addAttribute("comic_uri", "https://imgs.xkcd.com/comics/bad_code.png");
         return "game";
     }
@@ -83,12 +97,12 @@ public class GameController {
         return "redirect:/game";
     }
 
-
     @GetMapping(value = "/game-move")
     public String gameMove(@ModelAttribute("player") Player player,
                            @ModelAttribute("game") TictactoeGame game,
                            @ModelAttribute("move") int move) {
         game.playerMove(move);
+        game.aiMove(getAiMove(game));
         if (game.isGameOver()) {
             return "redirect:gameover";
         }
