@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AvatarController {
 
     @GetMapping("/avatar")
-    public AvatarService avatar(@ModelAttribute ("avatarString") String avatarString) {
+    public AvatarService avatar(@ModelAttribute("avatarString") String avatarString) {
         return new AvatarService("https://robohash.org/" + avatarString);
     }
 }
