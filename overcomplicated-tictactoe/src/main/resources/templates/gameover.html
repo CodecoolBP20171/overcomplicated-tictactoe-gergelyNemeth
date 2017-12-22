@@ -78,7 +78,7 @@
                 </button>
                 <p class="lead funfact" th:utext="'&ldquo;' + ${funfact} + '&rdquo;'"></p>
                 <h2>Game Over</h2>
-                <h2 th:text="${game.winner} + ' won!'"></h2>
+                <h2 th:text="${game.winner} != 'Draw' ? ${game.winner} + ' won!' : 'Draw!'"></h2>
                 <a href="/game/new" class="btn btn-default">Start a new game!</a>
             </div>
             </div>
