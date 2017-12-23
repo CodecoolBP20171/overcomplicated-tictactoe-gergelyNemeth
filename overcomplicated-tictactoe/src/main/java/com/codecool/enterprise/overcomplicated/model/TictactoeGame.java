@@ -55,6 +55,7 @@ public class TictactoeGame {
     }
 
     public void playerMove(int move) {
+        initGame();
         if (isMoveValid(move) || winner != null) {
             table[move] = "O";
             System.out.println("Player moved " + move);

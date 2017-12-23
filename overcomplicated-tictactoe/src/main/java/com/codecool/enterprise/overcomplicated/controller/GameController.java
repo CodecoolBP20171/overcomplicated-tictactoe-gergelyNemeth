@@ -14,6 +14,8 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @SessionAttributes({"player", "game"})
@@ -57,6 +59,23 @@ public class GameController {
         }
     }
 
+    @ModelAttribute("comics")
+    public Map<String, Object> getComics() {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response =
+                    restTemplate.getForEntity("http://localhost:60002/comics", String.class);
+            JacksonJsonParser jacksonJsonParser = new JacksonJsonParser();
+            return jacksonJsonParser.parseMap(response.getBody());
+        } catch (ResourceAccessException e) {
+            System.out.println("Comics Service is unavailable: " + e);
+            Map<String, Object> comics = new HashMap<>();
+            comics.put("comic_uri", "https://imgs.xkcd.com/comics/bad_code.png");
+            comics.put("comic_alt", "Comic placeholder");
+            return comics;
+        }
+    }
+
     private Integer getAiMove(TictactoeGame game) {
         Integer move = null;
         try {
@@ -87,7 +106,8 @@ public class GameController {
     public String gameView(@ModelAttribute("player") Player player, Model model,
                            @ModelAttribute("game") TictactoeGame game) {
         game.initGame();
-        model.addAttribute("comic_uri", "https://imgs.xkcd.com/comics/bad_code.png");
+//        model.addAttribute("comics", getComics());
+//        model.addAttribute("comic_uri", "https://imgs.xkcd.com/comics/bad_code.png");
         return "game";
     }
 

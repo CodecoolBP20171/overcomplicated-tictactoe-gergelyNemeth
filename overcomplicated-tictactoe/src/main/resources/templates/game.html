@@ -87,7 +87,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 text-center">
-                    <img th:src="${comic_uri}" alt="Comic placeholder"/>
+                    <img th:src="${comics.get('comic_uri')}" th:alt="${comics.get('comic_alt')}" th:title="${comics.get('comic_title')}"/>
                 </div>
             </div>
         </div>
