@@ -47,26 +47,11 @@
         <div class="col-xs-12 col-sm-6 col-sm-offset-3">
             <div class="container-fluid game-container">
                 <div class="row" th:each="i : ${#numbers.sequence(0, 2)}">
-                    <div class="col-xs-4">
-                        <div class="btn btn-default square" th:id="${i}*3">
-                            <i th:class="(${game.table[i*3]} == 'O') ? 'fa fa-circle-o' : ''" aria-hidden="true"></i>
-                            <i th:class="(${game.table[i*3]} == 'X') ? 'fa fa-times' : ''" aria-hidden="true"></i>
-                            <span th:if="${game.table[i*3]} == '-'">&nbsp;</span>
-                        </div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="btn btn-default square" th:id="${i}*3+1">
-                            <i th:class="(${game.table[i*3+1]} == 'O') ? 'fa fa-circle-o' : ''" aria-hidden="true"></i>
-                            <i th:class="(${game.table[i*3+1]} == 'X') ? 'fa fa-times' : ''" aria-hidden="true"></i>
-                            <span th:if="${game.table[i*3+1]} == '-'">&nbsp;</span>
-                        </div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="btn btn-default square" th:id="${i}*3+2">
-                            <i th:class="(${game.table[i*3+2]} == 'O') ? 'fa fa-circle-o' : ''" aria-hidden="true"></i>
-                            <i th:class="(${game.table[i*3+2]} == 'X') ? 'fa fa-times' : ''" aria-hidden="true"></i>
-                            <span th:if="${game.table[i*3+2]} == '-'">&nbsp;</span>
-                        </div>
+                    <div class="col-xs-4" th:each="j : ${#numbers.sequence(0, 2)}">
+                        <a th:href="@{/game-move(move=${i}*3+${j})}" class="btn btn-default square" th:id="${i}*3+${j}">
+                            <i th:if="${game.table[i*3+j]} == 'O'" class="fa fa-circle-o" aria-hidden="true"></i>
+                            <i th:if="${game.table[i*3+j]} == 'X'" class="fa fa-times" aria-hidden="true"></i>
+                        </a>
                     </div>
                 </div>
             </div>

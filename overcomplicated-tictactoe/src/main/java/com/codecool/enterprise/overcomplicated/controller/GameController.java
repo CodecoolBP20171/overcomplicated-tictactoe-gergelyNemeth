@@ -31,20 +31,6 @@ public class GameController {
         return new TictactoeGame();
     }
 
-    @ModelAttribute("funfact")
-    public String getFunfact() {
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> response =
-                    restTemplate.getForEntity("http://localhost:60001/funfact", String.class);
-            JacksonJsonParser jacksonJsonParser = new JacksonJsonParser();
-            return (String) jacksonJsonParser.parseMap(response.getBody()).get("funfact");
-        } catch (ResourceAccessException e) {
-            System.out.println("FunFact Service is unavailable: " + e);
-            return "Chuck Norris knows the last digit of pi.";
-        }
-    }
-
     @ModelAttribute("avatar_uri")
     public String getAvatarUri(HttpSession httpSession) {
         try {
@@ -56,6 +42,20 @@ public class GameController {
         } catch (ResourceAccessException e) {
             System.out.println("Avatar Service is unavailable: " + e);
             return "https://robohash.org/codecool";
+        }
+    }
+
+    @ModelAttribute("funfact")
+    public String getFunfact() {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response =
+                    restTemplate.getForEntity("http://localhost:60001/funfact", String.class);
+            JacksonJsonParser jacksonJsonParser = new JacksonJsonParser();
+            return (String) jacksonJsonParser.parseMap(response.getBody()).get("funfact");
+        } catch (ResourceAccessException e) {
+            System.out.println("FunFact Service is unavailable: " + e);
+            return "Chuck Norris knows the last digit of pi.";
         }
     }
 
@@ -106,8 +106,6 @@ public class GameController {
     public String gameView(@ModelAttribute("player") Player player, Model model,
                            @ModelAttribute("game") TictactoeGame game) {
         game.initGame();
-//        model.addAttribute("comics", getComics());
-//        model.addAttribute("comic_uri", "https://imgs.xkcd.com/comics/bad_code.png");
         return "game";
     }
 
